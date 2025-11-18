@@ -32,51 +32,63 @@ class MyButton1 extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
-
-    return IntrinsicWidth(
-      child: Container(
-        height: height,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _getBackgroundColor(cs),
-            foregroundColor: _getForegroundColor(cs),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_getBorderRadius()),
-              side: _getBorderSide(cs),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            elevation: variant == ButtonVariant.primary ? 2 : (variant == ButtonVariant.tertiary ? 1 : 0),
-          ).copyWith(
-            overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return cs.primary.withOpacity(0.8);
-                }
-                return null;
-              },
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: 18),
-                const SizedBox(width: 8.0),
-              ],
-              Text(
-                text,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
-                ),
-              ),
-            ],
-          ),
+    final elevated = ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(0, height),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        backgroundColor: _getBackgroundColor(cs),
+        foregroundColor: _getForegroundColor(cs),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_getBorderRadius()),
+          side: _getBorderSide(cs),
+        ),
+        elevation: variant == ButtonVariant.primary
+            ? 2
+            : (variant == ButtonVariant.tertiary ? 1 : 0),
+      ).copyWith(
+        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+              (states) {
+            if (states.contains(MaterialState.pressed)) {
+              return cs.primary.withOpacity(0.8);
+            }
+            return null;
+          },
         ),
       ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18),
+            const SizedBox(width: 6),
+          ],
+          Flexible(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14.0,
+              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
+              maxLines: null,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (width != null) {
+      return SizedBox(
+        width: width,
+        child: elevated,
+      );
+    }
+
+    return IntrinsicWidth(
+      child: elevated,
     );
   }
 

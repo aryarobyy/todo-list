@@ -37,7 +37,7 @@ class _HomeState extends ConsumerState<Home> {
           .read(categoryNotifierProvider.notifier)
           .categoryByCreator(widget.userData.id);
         await ref
-          .read(todoNotifierProvider.notifier)
+          .watch(todoNotifierProvider.notifier)
           .getTodosByCreator(creatorId: widget.userData.id);
       }
     });
@@ -288,7 +288,7 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   Widget _buildTodo(BuildContext context){
-    final state = ref.read(todoNotifierProvider);
+    final state = ref.watch(todoNotifierProvider);
     final todos = state.todos ?? [];
 
     return Expanded(
@@ -296,7 +296,10 @@ class _HomeState extends ConsumerState<Home> {
         itemCount: todos.length,
         itemBuilder: (context, index) {
           final TodoModel todo = todos[index];
-          return TodoCard(todo: todo);
+          return TodoCard(
+            todo: todo,
+            creatorId: widget.userData.id,
+          );
         }
       )
     );

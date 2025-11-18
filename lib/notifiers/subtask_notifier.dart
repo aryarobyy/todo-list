@@ -142,6 +142,7 @@ class SubTaskNotifier extends StateNotifier<State> {
       rethrow;
     }
   }
+
   Future<void> deleteSubTask({
     required String creatorId,
     required String todoId,
